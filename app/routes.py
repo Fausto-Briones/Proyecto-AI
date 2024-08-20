@@ -1,6 +1,7 @@
 from flask import request, jsonify, render_template
 from . import create_app
 from .models import Model
+import pandas as pd
 
 app = create_app()
 
@@ -18,3 +19,8 @@ def predict():
         return jsonify({'output': prediction})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+@app.route('/data', methods=['GET'])
+def get_data():
+    data = pd.read_csv('data/database.csv')
+    result = data.to_dict(orient='records')
+    return jsonify(result)
