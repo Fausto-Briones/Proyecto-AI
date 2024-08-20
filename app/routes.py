@@ -2,7 +2,7 @@ from flask import request, jsonify, render_template
 from . import create_app
 from .models import Model
 import pandas as pd
-
+from connectionAdapter import ConnectionAdapter
 app = create_app()
 
 @app.route('/')
@@ -13,7 +13,9 @@ def home():
 def predict():
     try:
         data = request.json
-        model_input = data['input']
+        model_input = ConnectionAdapter.preprocess_validation_data(data['input'])
+        model = Model()
+        prediction = model.predict(model_input)
         model = Model()
         prediction = model.predict(model_input)
         return jsonify({'output': prediction})
